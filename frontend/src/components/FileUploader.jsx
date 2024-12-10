@@ -18,6 +18,8 @@ export default function FileUploader({setResult}){
         })
 
         const result = await res.json()
+
+        console.log(result)
         
         setResult(result)
 
@@ -39,12 +41,12 @@ export default function FileUploader({setResult}){
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                 </svg>
                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">*.docx file only</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">*.docx files only</p>
             </div>
             <input id="dropzone-file" type="file" className="hidden" accept=".docx" onChange={selectingFunction} />
         </label>
     </div> 
-    {inputErr !==null && <p className={`text-center mt-3 text-white ${inputErr ? "text-red-800":"text-green-600"}`}>{inputErr ? "No file found":selectedFile.get('file').name}</p>}
+    {inputErr !==null && <p className={`text-center mt-3 ${inputErr ? "text-red-800":"text-green-600"}`}>{inputErr ? "No file found":selectedFile.get('file').name}</p>}
     <div className="flex mt-4">
         <button className="mx-auto text-xl text-white font-bold bg-green-700 px-3 py-2 rounded-lg hover:bg-green-600" onClick={submitFile}>Generate</button>
     </div>

@@ -14,18 +14,23 @@ export default function Results({result}){
         )
     }
 
+    console.log(result.image_name)
+
 
     return(
-        <div className="mt-3 max-w-5xl mx-auto mb-5 p-5 pt-16 text-white bg-[url('https://images.unsplash.com/photo-1719937051157-d3d81cc28e86?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')]">
+        <div className={`mt-3 max-w-5xl mx-auto mb-5 p-5 pt-16 text-white bg-[url('${result.image_name}')] text-gray-900`}>
+            <img src={result.image_name} alt="jkdfb" className="h-30 absolute z-[-1]" />
+
+            <h2 className="text-center text-2xl font-bold mb-2">{result.title}</h2>
             
             <h3 className="font-semibold">Key points</h3>
-            <p className="font-light mb-3">{result[0]}</p>
+            <p className="font-light mb-3">{result.insights[0]}</p>
             
             <h3 className="font-semibold">From</h3>
-            <p className="font-light mb-3">{result[1]}</p>
+            <p className="font-light mb-3">{result.insights[1]}</p>
 
             <h3 className="font-semibold">To</h3>
-            <p className="font-light mb-3">{result[2]}</p>
+            <p className="font-light mb-3">{result.insights[2]}</p>
 
         </div>
     )
