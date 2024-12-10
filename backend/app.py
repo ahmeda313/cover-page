@@ -36,9 +36,9 @@ def upload_file():
 
 
         # Process the document
-        insights = generate_insights(text)
+        result = generate_insights(text)
         
-        return jsonify(insights), 200
+        return jsonify(result), 200
     else:
         return "Invalid file type. Only .docx files are allowed.", 400
 

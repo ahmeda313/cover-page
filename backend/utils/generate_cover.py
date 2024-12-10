@@ -4,6 +4,9 @@ from langchain_openai import OpenAIEmbeddings
 from langchain.chains import RetrievalQA
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
+from langchain.prompts import PromptTemplate
+from langchain_community.utilities.dalle_image_generator import DallEAPIWrapper
+from langchain.chains import LLMChain
 import os
 
 
@@ -19,6 +22,14 @@ def generate_insights(document):
 
     # Generate embeddings for chunks and create FAISS index
     embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+#     embeddings = (
+#     OpenAIEmbeddings(
+#         openai_api_base=os.getenv("ST_EMBEDDINGS_BASE_URL"),
+#         openai_api_key=os.getenv("PRIVATE_OPENAI_API_KEY"),
+#         tiktoken_enabled=False,
+#         model="mixedbread-ai/mxbai-embed-large-v1",
+#     )
+# )
     faiss_index = FAISS.from_texts(chunks, embeddings)
     
 
@@ -27,7 +38,10 @@ def generate_insights(document):
     llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=openai_api_key)
     context = ''' You are an expert assistant tasked with answering questions 
             based on the most relevant context provided. Use the following pieces of 
-            context to answer the question as precisely and shortly as possible.'''
+            context to answer the question in short and as precisely as possible.
+            
+            Just give answers to the point. And no negative answers.
+            QUESTION : '''
 
 
     qa_chain = RetrievalQA.from_chain_type(
@@ -37,14 +51,53 @@ def generate_insights(document):
 
     )
 
-    result = []
+    insights = []
     def ask_question(query):
         response = qa_chain.invoke(query)
         return response['result']
 
 
-    result.append(ask_question(context+"What are the key points discussed in the document?"))
-    result.append(ask_question(context+"Who wrote the document?"))
-    result.append(ask_question(context+"Who is the document intended for?"))
+    insights.append(ask_question(context+"What are the key points discussed in the document?"))
+    insights.append(ask_question(context+"Creator of the document?, give the name also if it is an organization"))
+    insights.append(ask_question(context+"Who is the document intended for?"))
+    title = ask_question(context+"What is the title of the document?")
+    topic = ask_question(context+"What is the most important topic in this content, give in one word?")
+
+
+    image_name = image_generation(topic)
+
+    result = {"title":title, "image_name":image_name,"insights":insights}
 
     return result
+
+
+def image_generation(image_description):
+
+    # Create a prompt template to refine the image generation prompt
+    print("topic", image_description)
+    prompt = PromptTemplate(
+        input_variables=["image_description"],
+        template="Create a concise, vivid description for an image on this topic: {image_description}"
+    )
+
+    # Initialize the language model (optional, for prompt refinement)
+    llm = ChatOpenAI(temperature=0.7, model="gpt-3.5-turbo")
+
+    # Create a chain to potentially enhance the image description
+    image_description_chain = LLMChain(llm=llm, prompt=prompt)
+
+    # Generate an enhanced image description
+    original_description = "give an image on this topic, it must be like a cover page {image_description}"
+
+    # Truncate the description
+    refined_description = image_description_chain.run(original_description)
+
+    print("Refined Description:", refined_description)
+    print("Description Length:", len(refined_description))
+
+    # Use DALL-E to generate the image
+    image_url = DallEAPIWrapper().run(refined_description)
+
+    print("Generated Image URL:", image_url)
+
+    return image_url
