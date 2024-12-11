@@ -18,19 +18,30 @@ export default function Results({result}){
 
 
     return(
-        <div className={`mt-3 max-w-5xl mx-auto mb-5 p-5 pt-16 text-white bg-[url('${result.image_name}')] text-gray-900`}>
-            <img src={result.image_name} alt="jkdfb" className="h-30 absolute z-[-1]" />
+        <div className={`mt-3 max-w-5xl mx-auto mb-5 p-5 pt-16 text-white bg-[url('http://localhost:5000/static/${result.image_name}')] flex justify-center content-center max-w-2xl drop-shadow-xl`}>
+            {/* <img src={`http://localhost:5000/static/${result.image_name}`} alt="jkdfb" className="absolute z-[-1] max-w-3xl" /> */}
 
-            <h2 className="text-center text-2xl font-bold mb-2">{result.title}</h2>
+            {/* <div className="mt-8">
+            <h2 className="text-center text-4xl font-bold mb-5">{result.title.split('"')[1]}</h2>
             
-            <h3 className="font-semibold">Key points</h3>
-            <p className="font-light mb-3">{result.insights[0]}</p>
+            <h3 className="font-bold text-3xl mt-8">Key points</h3>
+            <p className="font-medium mb-3 text-md">{result.insights[0]}</p>
             
-            <h3 className="font-semibold">From</h3>
-            <p className="font-light mb-3">{result.insights[1]}</p>
+            <h3 className="font-bold text-3xl mt-8">From</h3>
+            <p className="font-medium mb-3 text-md">{result.insights[1]}</p>
 
-            <h3 className="font-semibold">To</h3>
-            <p className="font-light mb-3">{result.insights[2]}</p>
+            <h3 className="font-bold text-3xl mt-8">To</h3>
+            <p className="font-medium mb-3 text-md">{result.insights[2]}</p>
+
+            <p className="font-semibold text-right">
+                {new Date().toDateString()}
+            </p>
+            </div> */}
+
+
+            <a href="http://localhost:5000/static/output.docx" className="text-xl bg-red-800 p-2 rounded-md drop-shadow-2xl hover:drop-shadow-none font-bold">Download</a>
+
+
 
         </div>
     )

@@ -10,7 +10,7 @@ CORS(app)
 
 # Configure upload and output directories
 UPLOAD_FOLDER = 'uploads'
-OUTPUT_FOLDER = 'outputs'
+OUTPUT_FOLDER = 'static'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
